@@ -30,6 +30,9 @@ public class CameraScript : MonoBehaviour
     Vector2 m_leftPoint;
     Vector2 m_rightPoint;
     Vector2 m_originalPoint;
+
+    Vector3 velocity = Vector3.zero;
+    public float smoothTime = 0.5f;
     private void Start()
     {
 
@@ -48,7 +51,10 @@ public class CameraScript : MonoBehaviour
     {
         m_trackingPosition = new Vector3(m_player.transform.position.x, m_player.transform.position.y, -10f);
 
-        transform.position = Vector3.Lerp(m_camera.transform.position, m_trackingPosition, m_speed * Time.deltaTime);
+        //transform.position = Vector3.Lerp(m_camera.transform.position, m_trackingPosition, m_speed * Time.deltaTime);
+
+
+        transform.position = Vector3.SmoothDamp(transform.position, m_trackingPosition, ref velocity, smoothTime);
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
@@ -123,11 +129,15 @@ public class CameraScript : MonoBehaviour
                 yield break;
             }
         }
+
+   
     }
 
     IEnumerator MicroScopeSwitchEnter()
     {
-        while (m_vignette.center.value.x > m_originalPoint.x)
+
+
+        while (m_vignette.center.value.x != m_originalPoint.x)
         {
             m_vignette.center.value = Vector2.Lerp(m_vignette.center.value, m_originalPoint, m_switchSpeed * Time.deltaTime);
             yield return null;
@@ -138,6 +148,9 @@ public class CameraScript : MonoBehaviour
                 yield break;
             }
         }
+
+
+
     }
 
     IEnumerator UnBlurScreen()
