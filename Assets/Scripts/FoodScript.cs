@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FoodScript : MonoBehaviour
@@ -19,5 +17,30 @@ public class FoodScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public int GetFood(bool t_isOffSpring)
+    {
+        int chompOfFood;
+
+        if (t_isOffSpring)
+        {
+            chompOfFood = 1;
+        }
+        else
+        {
+            chompOfFood = Random.Range(3, 5);
+
+            if (chompOfFood > m_foodAmount)
+            {
+                chompOfFood = m_foodAmount;
+            }
+        }
+
+        m_foodAmount -= chompOfFood;
+
+        UpdateFoodAmount();
+
+        return chompOfFood;
     }
 }

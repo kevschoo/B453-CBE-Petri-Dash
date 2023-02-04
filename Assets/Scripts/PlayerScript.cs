@@ -1,29 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// enums
+using EnumHolder;
 
 public class PlayerScript : BaseOrganism
 {
-    private Rigidbody2D m_rigidbody2D;
     [SerializeField]
     private int m_speed;
     Vector2 m_velocity;
 
+    [SerializeField]
+    List<Offspring> _children;
+
     //True means independent thinking, false means flock mode
     [SerializeField]
     bool m_toggleOffspringBehaviour;
+
+    [SerializeField]
+    int _foodRequired;
+
+    [SerializeField]
+    GameObject _offspringPrefab;
+
+    [SerializeField]
+    bool m_controlsEnabled = true;
+
     // Start is called before the first frame update
-    void Start()
+    new void Awake()
     {
-        m_rigidbody2D= GetComponent<Rigidbody2D>();
+        base.Awake();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
+        if (m_controlsEnabled)
+        {
+            m_velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
+            _rigidbody2D.velocity = m_velocity * m_speed;
+        }
+
         //transform.position += m_velocity * m_speed * Time.deltaTime;
-        m_rigidbody2D.velocity = m_velocity * m_speed;
+
         if (Input.GetKeyUp(KeyCode.X))
         {
             m_toggleOffspringBehaviour = !m_toggleOffspringBehaviour;
@@ -31,22 +50,108 @@ public class PlayerScript : BaseOrganism
 
         if (Input.GetKeyUp(KeyCode.C))
         {
-            // Produce off spring
+            ProduceOffspring();
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+
+
+    private void ProduceOffspring()
     {
-        if (collision.gameObject.tag == "Food")
+        if (_stats.Food >= _foodRequired)
         {
-            collision.gameObject.GetComponent<FoodScript>().m_foodAmount -= 1;
-            collision.gameObject.GetComponent<FoodScript>().UpdateFoodAmount();
+            _stats.Food -= (int)(_foodRequired * 0.75f);
+            ScaleWithFood();
 
-            _stats.HarvestFood(1);
+            // instantiate the offspring
+            GameObject clone = Instantiate(_offspringPrefab,
+                                            transform.position,
+                                            transform.rotation);
+            Offspring offspring = clone.GetComponent<Offspring>();
+            offspring.AssignParent(this,_spriteRenderer.sprite);
 
-            float force = 5000f;
+            foreach (Offspring child in _children)
+            {
+                child.AssignSibling(offspring);
+            }
 
-            m_rigidbody2D.AddForce(collision.contacts[0].normal * force);
+            _children.Add(offspring);
         }
     }
+
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Food")
+    //    {
+            
+
+    //        _stats.HarvestFood(collision.gameObject.GetComponent<FoodScript>().GetFood(false));
+
+    //        float force = 5000f;
+
+    //        m_rigidbody2D.AddForce(collision.contacts[0].normal * force);
+    //    }
+    //}
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        
+        if (collision.CompareTag("Superfood"))
+        {
+            Trait trait = Utility.PickTrait(_stats.Luck);
+            _traits.Add(trait);
+
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("Food"))
+        {
+            _stats.HarvestFood(collision.gameObject.GetComponent<FoodScript>().GetFood(false));
+            ScaleWithFood();
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            StartCoroutine(HaltControls());
+        }
+        else if (collision.CompareTag("SingleCelledOrganism"))
+        {
+            SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
+            if (organism.CanAttack)
+                _stats.TakeDamage(organism.Stats.Damage);
+
+            if (CanAttack)
+            {
+                organism.Stats.TakeDamage(_stats.Damage);
+            }
+
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            StartCoroutine(HaltControls());
+        }
+        else if (collision.CompareTag("Offspring"))
+        {
+            Offspring offspring = collision.GetComponent<Offspring>();
+            if (_children.Contains(offspring))
+                return;
+
+            if (offspring.CanAttack)
+                _stats.TakeDamage(offspring.Stats.Damage);
+
+            if (CanAttack)
+            {
+                offspring.Stats.TakeDamage(_stats.Damage);
+
+            }
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            StartCoroutine(HaltControls());
+        }
+    }
+
+    IEnumerator HaltControls()
+    {
+        m_controlsEnabled = false;
+        yield return new WaitForSeconds(0.1f);
+        m_controlsEnabled = true;
+    }
+
 }

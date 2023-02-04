@@ -286,6 +286,8 @@ public class Offspring : BaseOrganism
                         StartSearching();
                 }
             }
+
+
         }
         else if (collision.CompareTag("Offspring"))
         {
@@ -310,8 +312,9 @@ public class Offspring : BaseOrganism
         }
         else if (collision.CompareTag("Food"))
         {
-            _stats.HarvestFood(25);
-            Destroy(collision.gameObject);
+            _stats.HarvestFood(collision.GetComponent<FoodScript>().GetFood(false));
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
         }
     }
 

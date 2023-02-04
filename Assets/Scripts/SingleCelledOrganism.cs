@@ -336,9 +336,10 @@ public class SingleCelledOrganism : BaseOrganism
         }
         else if (collision.CompareTag("Food"))
         {
-            _stats.HarvestFood(25);
+            _stats.HarvestFood(collision.GetComponent<FoodScript>().GetFood(false));
             ScaleWithFood();
-            Destroy(collision.gameObject);
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {
