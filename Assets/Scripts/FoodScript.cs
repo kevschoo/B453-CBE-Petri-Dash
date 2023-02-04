@@ -15,5 +15,9 @@ public class FoodScript : MonoBehaviour
     public void UpdateFoodAmount()
     {
         transform.localScale = new Vector3(m_foodAmount, m_foodAmount);
+        if (m_foodAmount <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

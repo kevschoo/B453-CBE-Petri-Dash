@@ -30,6 +30,9 @@ public class CameraScript : MonoBehaviour
     Vector2 m_leftPoint;
     Vector2 m_rightPoint;
     Vector2 m_originalPoint;
+
+    Vector3 velocity = Vector3.zero;
+    public float smoothTime = 0.5f;
     private void Start()
     {
 
@@ -48,12 +51,10 @@ public class CameraScript : MonoBehaviour
     {
         m_trackingPosition = new Vector3(m_player.transform.position.x, m_player.transform.position.y, -10f);
 
-        transform.position = Vector3.Lerp(m_camera.transform.position, m_trackingPosition, m_speed * Time.deltaTime);
+        transform.position = Vector3.SmoothDamp(transform.position, m_trackingPosition, ref velocity, smoothTime);
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            //m_cameraSwitchActivte = true;
-            //MicroScopeZoom();
             if (zoomLevel != 3)
             {
                 zoomLevel += 1;
@@ -62,7 +63,8 @@ public class CameraScript : MonoBehaviour
             {
                 zoomLevel = 1;
             }
-            StartCoroutine(MicroScopeSwitchExit(zoomLevel));
+            StopAllCoroutines();
+            StartCoroutine(MicroScopeSwitchExitLeft(zoomLevel));
         }
 
         if (Input.GetKeyUp(KeyCode.E))
@@ -75,7 +77,8 @@ public class CameraScript : MonoBehaviour
             {
                 zoomLevel = 3;
             }
-            StartCoroutine(MicroScopeSwitchExit(zoomLevel));
+            StopAllCoroutines();
+            StartCoroutine(MicroScopeSwitchExitRight(zoomLevel));
 
         }
     }
@@ -84,7 +87,7 @@ public class CameraScript : MonoBehaviour
     // .4, .7, 1.0
     // Use those sets for intensisty
     // Intensity is inversaly proportional to size of camera
-    IEnumerator MicroScopeSwitchExit(int zoomLevel)
+    IEnumerator MicroScopeSwitchExitLeft(int zoomLevel)
     {
         while (m_vignette.center.value.x > m_leftPoint.x + 0.2f)
         {
@@ -125,9 +128,52 @@ public class CameraScript : MonoBehaviour
         }
     }
 
+    IEnumerator MicroScopeSwitchExitRight(int zoomLevel)
+    {
+        while (m_vignette.center.value.x < m_rightPoint.x - 0.2f)
+        {
+            m_vignette.center.value = Vector2.Lerp(m_vignette.center.value, m_rightPoint, m_switchSpeed * Time.deltaTime);
+            yield return null;
+
+
+            if (m_vignette.center.value.x > m_rightPoint.x - 0.2f)
+            {
+                switch (zoomLevel)
+                {
+                    case 1:
+                        m_fieldOfView = 10;
+                        m_vignette.intensity.value = 0.4f;
+                        m_camera.orthographicSize = m_fieldOfView;
+                        break;
+
+                    case 2:
+                        m_fieldOfView = 20;
+                        m_vignette.intensity.value = 0.7f;
+                        m_camera.orthographicSize = m_fieldOfView;
+                        break;
+
+                    case 3:
+                        m_fieldOfView = 30;
+                        m_vignette.intensity.value = 1f;
+                        m_camera.orthographicSize = m_fieldOfView;
+                        break;
+
+                    default:
+                        break;
+                }
+                m_vignette.center.value = m_leftPoint;
+                m_depthOfField.focalLength.value = 30;
+                StartCoroutine(MicroScopeSwitchEnter());
+                yield break;
+            }
+        }
+    }
+
+
     IEnumerator MicroScopeSwitchEnter()
     {
-        while (m_vignette.center.value.x > m_originalPoint.x)
+
+        while (m_vignette.center.value.x != m_originalPoint.x)
         {
             m_vignette.center.value = Vector2.Lerp(m_vignette.center.value, m_originalPoint, m_switchSpeed * Time.deltaTime);
             yield return null;
@@ -138,6 +184,9 @@ public class CameraScript : MonoBehaviour
                 yield break;
             }
         }
+
+
+
     }
 
     IEnumerator UnBlurScreen()
