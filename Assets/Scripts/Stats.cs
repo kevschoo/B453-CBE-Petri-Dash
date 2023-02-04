@@ -110,4 +110,5 @@ public class Stats
 
 
     public bool IsAlive { get => Health > 0; }
+    public bool CanAttack { get => Damage > 0; }
 }

@@ -35,4 +35,8 @@ public abstract class BaseOrganism : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, _sightRadius);
     }
+
+
+
+    public bool CanAttack { get => _stats.CanAttack; }
 }
