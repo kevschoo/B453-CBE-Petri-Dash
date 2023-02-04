@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7849076992389386697}
   - component: {fileID: 7849076992389386698}
-  - component: {fileID: 7849076992389386703}
+  - component: {fileID: 8430464947807063465}
   - component: {fileID: 7849076992389386696}
   m_Layer: 0
   m_Name: Super Food
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7849076992389386703
+--- !u!114 &8430464947807063465
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,10 +95,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7849076992389386699}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Script: {fileID: 11500000, guid: a4139e5729d18c04ab2c8839030d3a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_foodAmount: 0
 --- !u!61 &7849076992389386696
 BoxCollider2D:
   m_ObjectHideFlags: 0
