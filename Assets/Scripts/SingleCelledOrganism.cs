@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using UnityEngine;
 // enums
 using EnumHolder;
-using System.Diagnostics.Tracing;
 
 public class SingleCelledOrganism : BaseOrganism
 {
@@ -16,14 +15,6 @@ public class SingleCelledOrganism : BaseOrganism
     }
 
 
-    enum Priority
-    {
-        Superfood,
-        Offspring,
-        Food
-    }
-
-
     [SerializeField]
     List<Offspring>     _offspring;
     [SerializeField]
@@ -31,22 +22,19 @@ public class SingleCelledOrganism : BaseOrganism
     [SerializeField]
     int                 _foodRequired;
 
-    Transform           _target;
     State               _state;
 
+    bool                _wondering;
 
 
-    void Awake()
+
+    new void Awake()
     {
+        base.Awake();
+
         _state = State.Search;
         _target = null;
-    }
-
-
-
-    void Start()
-    {
-        
+        _wondering = false;
     }
 
 
@@ -85,25 +73,85 @@ public class SingleCelledOrganism : BaseOrganism
 
     private void SearchForTarget()
     {
+        if (_wondering) { return; }
 
+        if (_target == null)
+        {
+            StartCoroutine(Wondering());
+        }
+        else
+            _state = State.Seek;
+    }
+
+    private IEnumerator Wondering()
+    {
+        _wondering = true;
+        float timer = 0.0f;
+        float duration = 3.0f;
+
+        // move in a sensible direction
+        Vector3 randomPosition = new Vector3(Random.Range(-50.0f, 50.0f),
+                                             Random.Range(-50.0f, 50.0f), 
+                                             0.0f);
+        Vector2 direction = (randomPosition - transform.position).normalized;
+
+        _rigidbody2D.velocity = direction * _stats.Speed;
+
+        while (timer < duration && _target == null)
+        {
+            yield return new WaitForEndOfFrame();
+
+            timer += Time.deltaTime;
+        }
+
+        _rigidbody2D.velocity = Vector2.zero;
+        _wondering = false;
     }
 
 
     private void SeekToTarget()
     {
+        if (_target == null)
+        {
+            _state = State.Search;
+            return;
+        }
 
+        Vector2 direction = (_target.position - transform.position).normalized;
+        _rigidbody2D.velocity = direction * _stats.Speed;
+
+        if (Vector2.Distance(transform.position, _target.position) < 0.1f)
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+
+            if (_target.CompareTag("Food") ||
+                _target.CompareTag("Superfood"))
+                _state = State.Harvest;
+            else
+                _state = State.Fight;
+        }
     }
 
 
     private void HarvestTarget()
     {
-
+        if (_target == null)
+            _state = State.Search;
+        else if (Vector2.Distance(transform.position, _target.position) > 0.1f)
+        {
+            _state = State.Seek;
+        }
     }
 
 
     private void FightTarget()
     {
-
+        if (_target == null)
+            _state = State.Search;
+        else if (Vector2.Distance(transform.position, _target.position) > 0.1f)
+        {
+            _state = State.Seek;
+        }
     }
 
 
@@ -159,7 +207,8 @@ public class SingleCelledOrganism : BaseOrganism
             else if (collider.CompareTag("Offspring") && _stats.CanAttack)
             {
                 Offspring offspring = collider.GetComponent<Offspring>();
-                if (_offspring.Contains(offspring))
+                if (_offspring.Contains(offspring) ||
+                    offspring.Stats.IsAlive == false)
                     continue;
 
                 if (closestOffspring != null)
@@ -176,7 +225,9 @@ public class SingleCelledOrganism : BaseOrganism
             else if (collider.CompareTag("SingleCelledOrganism") && _stats.CanAttack)
             {
                 SingleCelledOrganism organism = collider.GetComponent<SingleCelledOrganism>();
-                if (organism._stats.CanAttack)
+                if (organism.GetInstanceID() == GetInstanceID() ||
+                    organism.Stats.CanAttack ||
+                    organism.Stats.IsAlive == false)
                     continue;
 
                 if (closestSingCellOrganism != null)
@@ -222,6 +273,7 @@ public class SingleCelledOrganism : BaseOrganism
         if (_stats.Food >= _foodRequired && HasPositiveTrait())
         {
             _stats.Food -= (int)(_foodRequired * 0.75f);
+            Scale(Stats.Food * 0.0025f);
 
             // instantiate the offspring
             GameObject clone = Instantiate(_offspringPrefab, 
@@ -229,6 +281,13 @@ public class SingleCelledOrganism : BaseOrganism
                                             transform.rotation);
             Offspring offspring = clone.GetComponent<Offspring>();
             offspring.AssignParent(this);
+
+            foreach (Offspring child in _offspring)
+            {
+                child.AssignSibling(offspring);
+            }
+
+            _offspring.Add(offspring);
         }
     }
 
@@ -252,5 +311,65 @@ public class SingleCelledOrganism : BaseOrganism
         }
 
         return false;
+    }
+
+
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Superfood"))
+        {
+            Trait trait = Utility.PickTrait(_stats.Luck);
+            _traits.Add(trait);
+
+            Destroy(collision.gameObject);
+            StartSearching();
+        }
+        else if (collision.CompareTag("Food"))
+        {
+            _stats.HarvestFood(25);
+            Scale(Stats.Food * 0.0025f);
+
+            Destroy(collision.gameObject);
+            StartSearching();
+        }
+        else if (collision.CompareTag("SingleCelledOrganism"))
+        {
+            SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
+            if (organism.CanAttack)
+                _stats.TakeDamage(organism.Stats.Damage);
+
+            if (CanAttack)
+            {
+                organism.Stats.TakeDamage(_stats.Damage);
+                if (!organism.Stats.IsAlive)
+                    StartSearching();
+            }
+        }
+        else if (collision.CompareTag("Offspring"))
+        {
+            Offspring offspring = collision.GetComponent<Offspring>();
+            if (_offspring.Contains(offspring))
+                return;
+
+            if (offspring.CanAttack)
+                _stats.TakeDamage(offspring.Stats.Damage);
+
+            if (CanAttack)
+            {
+                offspring.Stats.TakeDamage(_stats.Damage);
+                if (!offspring.Stats.IsAlive)
+                    StartSearching();
+
+            }
+        }
+    }
+
+
+    private void StartSearching()
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+        _state = State.Search;
+        _target = null;
     }
 }
