@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -152,6 +152,12 @@ MonoBehaviour:
     Luck: 0.5
   _traits: 
   _sightRadius: 20
-  _offspring: []
+  _sprites:
+  - {fileID: 21300000, guid: 491427376cb9d224093108e47f3fbd29, type: 3}
+  - {fileID: 21300000, guid: b5e0c604cce4d7642af0f2e7a27b2a91, type: 3}
+  - {fileID: 21300000, guid: 593307fdf7d4bfb4da5d3632685b98c0, type: 3}
+  - {fileID: 21300000, guid: 932557b887345694e8f7829b0b56e51e, type: 3}
+  - {fileID: 21300000, guid: f2e68c2dbf2513844a0fb99aa1946b9b, type: 3}
+  _children: []
   _offspringPrefab: {fileID: 584443241509558212, guid: affdb2c3a4405624fa90d9250a33c498, type: 3}
   _foodRequired: 50

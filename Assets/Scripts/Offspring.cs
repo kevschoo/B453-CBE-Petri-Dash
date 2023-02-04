@@ -19,7 +19,7 @@ public class Offspring : BaseOrganism
     [SerializeField]
     List<Offspring>         _siblings;
     [SerializeField]
-    SingleCelledOrganism    _parent;
+    BaseOrganism            _parent;
 
     State                   _state;
 
@@ -258,36 +258,29 @@ public class Offspring : BaseOrganism
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Superfood"))
-        {
-            Trait trait = Utility.PickTrait(_stats.Luck);
-            _traits.Add(trait);
+        if (!_stats.IsAlive) { return; }
 
-            Destroy(collision.gameObject);
-            StartSearching();
-        }
-        else if (collision.CompareTag("Food"))
-        {
-            _stats.HarvestFood(25);
-            Scale(Stats.Food * 0.0025f);
-
-            Destroy(collision.gameObject);
-            StartSearching();
-        }
-        else if (collision.CompareTag("SingleCelledOrganism"))
+        if (collision.CompareTag("SingleCelledOrganism"))
         {
             SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
             if (_parent == organism)
             {
-
+                print("Parent was fed by a child.");
+                _parent.Stats.CollectFood(_stats.Food);
+                _parent.ScaleWithFood();
+                _stats.Food = 0;
             }
             else
             {
                 if (organism.CanAttack)
+                {
+                    print("Offspring was attacked by a Single Cell.");
                     _stats.TakeDamage(organism.Stats.Damage);
+                }
 
                 if (CanAttack)
                 {
+                    print("Offspring attacked a Single cell.");
                     organism.Stats.TakeDamage(_stats.Damage);
                     if (!organism.Stats.IsAlive)
                         StartSearching();
@@ -301,15 +294,24 @@ public class Offspring : BaseOrganism
                 return;
 
             if (offspring.CanAttack)
+            {
+                print("Offspring was attacked by an Offspring.");
                 _stats.TakeDamage(offspring.Stats.Damage);
+            }
 
             if (CanAttack)
             {
+                print("Offspring attacked an Offspring.");
                 offspring.Stats.TakeDamage(_stats.Damage);
                 if (!offspring.Stats.IsAlive)
                     StartSearching();
 
             }
+        }
+        else if (collision.CompareTag("Food"))
+        {
+            _stats.HarvestFood(25);
+            Destroy(collision.gameObject);
         }
     }
 
@@ -323,9 +325,11 @@ public class Offspring : BaseOrganism
 
 
 
-    public void AssignParent(SingleCelledOrganism parent)
+    public void AssignParent(BaseOrganism parent, Sprite sprite)
     {
         _parent = parent;
+
+        _spriteRenderer.sprite = sprite;
     }
 
 

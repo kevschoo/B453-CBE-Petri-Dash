@@ -102,15 +102,27 @@ public abstract class BaseOrganism : MonoBehaviour
 
 
 
+    public void TakeDamage(int damage)
+    {
+        _stats.TakeDamage(damage);
+        if (!_stats.IsAlive)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+
     public void ResetTarget()
     {
         _target = null;
     }
 
 
-    protected void Scale(float x)
+
+    public void ScaleWithFood()
     {
-        float scale = 1.0f + x;
+        float scale = 1.0f + Stats.Food * 0.0025f;
         transform.localScale = new Vector3(scale, scale, 1.0f);
     }
 

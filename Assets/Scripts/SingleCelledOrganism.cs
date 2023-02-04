@@ -16,15 +16,19 @@ public class SingleCelledOrganism : BaseOrganism
 
 
     [SerializeField]
-    List<Offspring>     _offspring;
+    List<Offspring>     _children;
     [SerializeField]
     GameObject          _offspringPrefab;
     [SerializeField]
     int                 _foodRequired;
+    [SerializeField]
+    Sprite[]            _sprites;
 
     State               _state;
 
     bool                _wondering;
+
+    static int          _spriteIndex = 0;
 
 
 
@@ -35,6 +39,9 @@ public class SingleCelledOrganism : BaseOrganism
         _state = State.Search;
         _target = null;
         _wondering = false;
+
+        _spriteRenderer.sprite = _sprites[_spriteIndex];
+        _spriteIndex++;
     }
 
 
@@ -207,7 +214,7 @@ public class SingleCelledOrganism : BaseOrganism
             else if (collider.CompareTag("Offspring") && _stats.CanAttack)
             {
                 Offspring offspring = collider.GetComponent<Offspring>();
-                if (_offspring.Contains(offspring) ||
+                if (_children.Contains(offspring) ||
                     offspring.Stats.IsAlive == false)
                     continue;
 
@@ -272,22 +279,22 @@ public class SingleCelledOrganism : BaseOrganism
     {
         if (_stats.Food >= _foodRequired && HasPositiveTrait())
         {
-            _stats.Food -= (int)(_foodRequired * 0.75f);
-            Scale(Stats.Food * 0.0025f);
+            _stats.Food -= (int)(_foodRequired * 0.80f);
+            ScaleWithFood();
 
             // instantiate the offspring
             GameObject clone = Instantiate(_offspringPrefab, 
                                             transform.position, 
                                             transform.rotation);
             Offspring offspring = clone.GetComponent<Offspring>();
-            offspring.AssignParent(this);
+            offspring.AssignParent(this, _spriteRenderer.sprite);
 
-            foreach (Offspring child in _offspring)
+            foreach (Offspring child in _children)
             {
                 child.AssignSibling(offspring);
             }
 
-            _offspring.Add(offspring);
+            _children.Add(offspring);
         }
     }
 
@@ -317,21 +324,21 @@ public class SingleCelledOrganism : BaseOrganism
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!_stats.IsAlive) { return; }
+
+
         if (collision.CompareTag("Superfood"))
         {
             Trait trait = Utility.PickTrait(_stats.Luck);
             _traits.Add(trait);
 
             Destroy(collision.gameObject);
-            StartSearching();
         }
         else if (collision.CompareTag("Food"))
         {
             _stats.HarvestFood(25);
-            Scale(Stats.Food * 0.0025f);
-
+            ScaleWithFood();
             Destroy(collision.gameObject);
-            StartSearching();
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {
@@ -349,7 +356,7 @@ public class SingleCelledOrganism : BaseOrganism
         else if (collision.CompareTag("Offspring"))
         {
             Offspring offspring = collision.GetComponent<Offspring>();
-            if (_offspring.Contains(offspring))
+            if (_children.Contains(offspring))
                 return;
 
             if (offspring.CanAttack)
