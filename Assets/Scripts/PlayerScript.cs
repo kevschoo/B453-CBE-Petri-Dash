@@ -30,7 +30,7 @@ public class PlayerScript : BaseOrganism
 
     public Canvas thing;
 
-    const float FOOD_DECAY_TIME = 1.0f;
+    const float FOOD_DECAY_TIME = 3.0f;
     const int FOOD_DECAY_AMOUNT = 1;
 
 
@@ -38,6 +38,8 @@ public class PlayerScript : BaseOrganism
     new void Awake()
     {
         base.Awake();
+
+        _stats.Food = _foodRequired - 1;
 
         StartCoroutine(DecayFood());
     }
@@ -49,7 +51,18 @@ public class PlayerScript : BaseOrganism
         {
             yield return new WaitForSeconds(FOOD_DECAY_TIME);
 
-            _stats.Food -= FOOD_DECAY_AMOUNT;
+            if (_stats.Food > 0)
+            {
+                _stats.Food -= FOOD_DECAY_AMOUNT;
+                if (_stats.Food < 0) 
+                    _stats.Food = 0;
+            }
+            else// (_stats.Food <= 0)
+            {
+                _stats.Health--;
+                if (_stats.Health <= 0)
+                    StartCoroutine(Die());
+            }
         }
     }
 
@@ -132,11 +145,17 @@ public class PlayerScript : BaseOrganism
         {
             SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
             if (organism.CanAttack)
-                _stats.TakeDamage(organism.Stats.Damage);
-
-            if (CanAttack)
             {
+                print("Player was attacked by a Single Cell");
+                _stats.TakeDamage(organism.Stats.Damage);
+                organism.Stats.Food += _stats.StealFood(organism.Stats.Damage);
+            }
+
+            if (CanAttack && _stats.IsAlive)
+            {
+                print("Player is attacking a Single Cell");
                 organism.Stats.TakeDamage(_stats.Damage);
+                _stats.Food += organism.Stats.StealFood(_stats.Damage);
             }
 
             _rigidbody2D.velocity = Vector2.zero;
@@ -150,11 +169,17 @@ public class PlayerScript : BaseOrganism
                 return;
 
             if (offspring.CanAttack)
-                _stats.TakeDamage(offspring.Stats.Damage);
-
-            if (CanAttack)
             {
+                print("Player was attacked by an offspring");
+                _stats.TakeDamage(offspring.Stats.Damage);
+                offspring.Stats.Food += _stats.StealFood(offspring.Stats.Damage);
+            }
+
+            if (CanAttack && _stats.IsAlive)
+            {
+                print("Player is attacking an offspring");
                 offspring.Stats.TakeDamage(_stats.Damage);
+                _stats.Food += offspring.Stats.StealFood(_stats.Damage);
 
             }
             _rigidbody2D.velocity = Vector2.zero;
@@ -170,4 +195,16 @@ public class PlayerScript : BaseOrganism
         m_controlsEnabled = true;
     }
 
+
+    private IEnumerator Die()
+    {
+        for (int i = 0; i < _children.Count; i++)
+        {
+            Destroy(_children[i]);
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        m_controlsEnabled = false;
+    }
 }
