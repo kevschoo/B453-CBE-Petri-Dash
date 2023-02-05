@@ -30,15 +30,16 @@ public class PlayerScript : BaseOrganism
 
     public Canvas thing;
 
-    const float FOOD_DECAY_TIME = 1.0f;
+    const float FOOD_DECAY_TIME = 2.0f;
     const int FOOD_DECAY_AMOUNT = 1;
 
-
+    float alpha;
+    bool imageShown = false;
 
     new void Awake()
     {
         base.Awake();
-
+        alpha = thing.GetComponentInChildren<Image>().color.a;
         StartCoroutine(DecayFood());
     }
 
@@ -76,11 +77,38 @@ public class PlayerScript : BaseOrganism
     }
 
 
-    IEnumerator PotatoScientistImage()
+    IEnumerator PotatoScientistImageFadeIn()
     {
-       thing.GetComponentInChildren<Image>().CrossFadeAlpha(1,5,false);
-       yield return null;
-        //yield return new WaitForSeconds(5f);
+        imageShown = true;
+        while (alpha < 1)
+        {
+            alpha += 0.09f;
+            thing.GetComponentInChildren<Image>().color = new Color(thing.GetComponentInChildren<Image>().color.r, thing.GetComponentInChildren<Image>().color.g, thing.GetComponentInChildren<Image>().color.b,alpha);
+            yield return new WaitForSeconds(0.1f);
+
+            if (alpha >= 1)
+            {
+                new WaitForSeconds(3f);
+                StartCoroutine(PotatoScientistImageFadeOut());
+                yield break;
+            }
+        }
+    }
+
+    IEnumerator PotatoScientistImageFadeOut()
+    {
+        while (alpha > 0)
+        {
+            alpha -= 0.09f;
+            thing.GetComponentInChildren<Image>().color = new Color(thing.GetComponentInChildren<Image>().color.r, thing.GetComponentInChildren<Image>().color.g, thing.GetComponentInChildren<Image>().color.b, alpha);
+            yield return new WaitForSeconds(0.1f);
+
+            if (alpha <= 0)
+            {
+                imageShown = false;
+                yield break;
+            }
+        }
     }
 
 
@@ -116,6 +144,11 @@ public class PlayerScript : BaseOrganism
             Trait trait = Utility.PickTrait(_stats.Luck);
             _traits.Add(trait);
 
+            if (!imageShown)
+            {
+                StartCoroutine(PotatoScientistImageFadeIn());
+            }
+
             Destroy(collision.gameObject);
         }
         else if (collision.CompareTag("Food"))
@@ -125,8 +158,8 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(HaltControls());
-            thing.GetComponentInChildren<Image>().CrossFadeAlpha(1, 5, false);
-            //StartCoroutine(PotatoScientistImage());
+
+
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {

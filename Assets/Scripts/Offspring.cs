@@ -76,21 +76,21 @@ public class Offspring : BaseOrganism
 
         if (_target == null)
         {
-            StartCoroutine(Wondering());
+            StartCoroutine(Wandering());
         }
         else
             _state = State.Seek;
     }
 
-    private IEnumerator Wondering()
+    private IEnumerator Wandering()
     {
         _wondering = true;
         float timer = 0.0f;
         float duration = 3.0f;
 
         // move in a sensible direction
-        Vector3 randomPosition = new Vector3(Random.Range(-50.0f, 50.0f),
-                                             Random.Range(-50.0f, 50.0f),
+        Vector3 randomPosition = new Vector3(Random.Range(-250.0f, 250.0f),
+                                             Random.Range(-250.0f, 250.0f),
                                              0.0f);
         Vector2 direction = (randomPosition - transform.position).normalized;
 

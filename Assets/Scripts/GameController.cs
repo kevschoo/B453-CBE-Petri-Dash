@@ -16,6 +16,9 @@ public class GameController : MonoBehaviour
     [SerializeField]
     bool m_roundInProgress;
 
+    [SerializeField]
+    int spawn;
+
     public List<GameObject> m_foodList = new List<GameObject>();
     void Start()
     {
@@ -35,12 +38,17 @@ public class GameController : MonoBehaviour
                 //30% chance to spawn super trait food
                 if (randomChance > 7)
                 {
-                     m_foodList.Add(Instantiate(m_superFood, new Vector3(Random.Range(-80, 80), Random.Range(-80, 80), 0), Quaternion.identity));
+                    GameObject x = Instantiate(m_superFood, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
+                    x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+                    m_foodList.Add(x);
+                    
                 }
                 //70% chance to spawn normal food
                 else
                 {
-                    m_foodList.Add(Instantiate(m_food, new Vector3(Random.Range(-80, 80), Random.Range(-80, 80), 0), Quaternion.identity));
+                    GameObject x = Instantiate(m_food, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
+                    x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+                    m_foodList.Add(x);
                 }
             }
 
