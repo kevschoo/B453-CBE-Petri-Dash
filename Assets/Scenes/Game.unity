@@ -321,7 +321,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1857870492}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1660,7 +1660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6133549085421101498, guid: 25ab88d4e12f68a4fa356bebe5cb7c62, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6133549085421101498, guid: 25ab88d4e12f68a4fa356bebe5cb7c62, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2355,6 +2355,7 @@ MonoBehaviour:
   _offspringPrefab: {fileID: 584443241509558212, guid: affdb2c3a4405624fa90d9250a33c498, type: 3}
   m_controlsEnabled: 1
   thing: {fileID: 1857870491}
+  scienceMan: {fileID: 208732498}
 --- !u!70 &1236319481
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2721,7 +2722,7 @@ RectTransform:
   - {fileID: 275964463}
   - {fileID: 1484257038}
   m_Father: {fileID: 1857870492}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2972,9 +2973,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 208732499}
   - {fileID: 736274404}
   - {fileID: 1631914102}
-  - {fileID: 208732499}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
