@@ -485,4 +485,7 @@ public class SingleCelledOrganism : BaseOrganism
 
         Destroy(gameObject);
     }
+
+
+    public float FoodPercentage { get => Stats.Food / (float)_foodRequired; }
 }

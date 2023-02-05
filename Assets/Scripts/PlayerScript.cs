@@ -207,4 +207,9 @@ public class PlayerScript : BaseOrganism
 
         m_controlsEnabled = false;
     }
+
+
+
+    public int ChildCount { get { return _children.Count; } }
+    public float FoodPercentage { get => Stats.Food / (float)_foodRequired; }
 }

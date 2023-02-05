@@ -109,6 +109,8 @@ public class Stats
 
 
 
+    public float HealthPercentage { get => Health / (float)MaxHealth; }
+    public float FoodPercentage { get => Food / (float)MaxFood; }
     public bool IsAlive { get => Health > 0; }
     public bool CanAttack { get => Damage > 0; }
 }
