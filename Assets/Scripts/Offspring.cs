@@ -24,6 +24,7 @@ public class Offspring : BaseOrganism
     State                   _state;
 
     bool                    _wondering;
+    bool                    _shouldDeposit;
 
 
 
@@ -34,6 +35,7 @@ public class Offspring : BaseOrganism
         _state = State.Search;
         _target = null;
         _wondering = false;
+        _shouldDeposit = false;
     }
 
 
@@ -66,7 +68,6 @@ public class Offspring : BaseOrganism
 
         AssessPriorities();
     }
-
 
 
     private void SearchForTarget()
@@ -155,6 +156,8 @@ public class Offspring : BaseOrganism
 
     private void AssessPriorities()
     {
+        if (_shouldDeposit) { return; }
+
         Collider2D[] colliders = CheckForCollision(transform.position);
         RespondToCollision(colliders);
     }
@@ -267,7 +270,6 @@ public class Offspring : BaseOrganism
             {
                 print("Parent was fed by a child.");
                 _parent.Stats.CollectFood(_stats.Food);
-                _parent.ScaleWithFood();
                 _stats.Food = 0;
             }
             else
@@ -321,6 +323,17 @@ public class Offspring : BaseOrganism
         _rigidbody2D.velocity = Vector2.zero;
         _state = State.Search;
         _target = null;
+    }
+
+
+    private void CheckFoodDeposit()
+    {
+        float foodFill = _stats.Food / (float)_stats.MaxFood;
+        if (foodFill > 0.70f)
+        {
+            _shouldDeposit = true;
+            _target = _parent.transform;
+        }
     }
 
 
