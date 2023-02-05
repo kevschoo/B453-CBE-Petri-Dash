@@ -30,10 +30,27 @@ public class PlayerScript : BaseOrganism
 
     public Canvas thing;
 
-    // Start is called before the first frame update
+    const float FOOD_DECAY_TIME = 1.0f;
+    const int FOOD_DECAY_AMOUNT = 1;
+
+
+
     new void Awake()
     {
         base.Awake();
+
+        StartCoroutine(DecayFood());
+    }
+
+
+    private IEnumerator DecayFood()
+    {
+        while (_stats.IsAlive)
+        {
+            yield return new WaitForSeconds(FOOD_DECAY_TIME);
+
+            _stats.Food -= FOOD_DECAY_AMOUNT;
+        }
     }
 
     // Update is called once per frame

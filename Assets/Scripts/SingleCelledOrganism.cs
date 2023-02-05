@@ -29,6 +29,11 @@ public class SingleCelledOrganism : BaseOrganism
     bool                _wondering;
 
     static int          _spriteIndex = 0;
+    
+
+    const float         FOOD_DECAY_TIME = 1.0f;
+    const int           FOOD_DECAY_AMOUNT = 1;
+
 
 
 
@@ -67,6 +72,19 @@ public class SingleCelledOrganism : BaseOrganism
             default:
                 _spriteRenderer.color = Color.white;
                 break;
+        }
+
+        StartCoroutine(DecayFood());
+    }
+
+
+    private IEnumerator DecayFood()
+    {
+        while (_stats.IsAlive)
+        {
+            yield return new WaitForSeconds(FOOD_DECAY_TIME);
+
+            _stats.Food -= FOOD_DECAY_AMOUNT;
         }
     }
 
@@ -135,8 +153,6 @@ public class SingleCelledOrganism : BaseOrganism
         {
             yield return new WaitForEndOfFrame();
 
-            if (!_isShocked)
-                _rigidbody2D.velocity = direction * _stats.Speed;
             timer += Time.deltaTime;
         }
 
@@ -387,9 +403,10 @@ public class SingleCelledOrganism : BaseOrganism
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(Shock());
         }
-        else if (collision.CompareTag("SingleCelledOrganism"))
+        else if (collision.CompareTag("SingleCelledOrganism") ||
+                 collision.CompareTag("Player"))
         {
-            SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
+            BaseOrganism organism = collision.GetComponent<BaseOrganism>();
             if (organism.CanAttack)
             {
                 print("Single Cell was attacked by another Single Cell");
@@ -432,20 +449,20 @@ public class SingleCelledOrganism : BaseOrganism
     }
 
 
-    private IEnumerator Shock()
-    {
-        _isShocked = true;
-
-        yield return new WaitForSeconds(0.1f);
-
-        _isShocked = false;
-    }
-
-
     private void StartSearching()
     {
         _rigidbody2D.velocity = Vector2.zero;
         _state = State.Search;
         _target = null;
+    }
+
+
+    private void Die()
+    {
+        for (int i = 0; i < _children.Count; i++)
+        {
+            Destroy(_children[i]);
+            Destroy(gameObject);
+        }
     }
 }

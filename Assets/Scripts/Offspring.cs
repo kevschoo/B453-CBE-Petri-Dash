@@ -102,8 +102,6 @@ public class Offspring : BaseOrganism
         {
             yield return new WaitForEndOfFrame();
 
-            if (!_isShocked)
-                _rigidbody2D.velocity = direction * _stats.Speed;
             timer += Time.deltaTime;
         }
 
@@ -280,9 +278,10 @@ public class Offspring : BaseOrganism
     {
         if (!_stats.IsAlive) { return; }
 
-        if (collision.CompareTag("SingleCelledOrganism"))
+        if (collision.CompareTag("SingleCelledOrganism") ||
+            collision.CompareTag("Player"))
         {
-            SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
+            BaseOrganism organism = collision.GetComponent<BaseOrganism>();
             if (_parent == organism)
             {
                 print("Parent was fed by a child.");
@@ -307,8 +306,6 @@ public class Offspring : BaseOrganism
                         StartSearching();
                 }
             }
-
-
         }
         else if (collision.CompareTag("Offspring"))
         {
