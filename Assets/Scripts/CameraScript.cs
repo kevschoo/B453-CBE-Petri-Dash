@@ -79,7 +79,7 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    // 10, 20, 30
+    // 50, 100, 130
     // .4, .7, 1.0
     // Use those sets for intensisty
     // Intensity is inversaly proportional to size of camera
@@ -96,19 +96,19 @@ public class CameraScript : MonoBehaviour
                 switch (zoomLevel)
                 {
                     case 1:
-                        m_fieldOfView = 10;
+                        m_fieldOfView = 50;
                         m_vignette.intensity.value = 0.4f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
 
                     case 2:
-                        m_fieldOfView = 20;
+                        m_fieldOfView = 100;
                         m_vignette.intensity.value = 0.7f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
 
                     case 3:
-                        m_fieldOfView = 30;
+                        m_fieldOfView = 130;
                         m_vignette.intensity.value = 1f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
@@ -137,19 +137,19 @@ public class CameraScript : MonoBehaviour
                 switch (zoomLevel)
                 {
                     case 1:
-                        m_fieldOfView = 10;
+                        m_fieldOfView = 50;
                         m_vignette.intensity.value = 0.4f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
 
                     case 2:
-                        m_fieldOfView = 20;
+                        m_fieldOfView = 100;
                         m_vignette.intensity.value = 0.7f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
 
                     case 3:
-                        m_fieldOfView = 30;
+                        m_fieldOfView = 130;
                         m_vignette.intensity.value = 1f;
                         m_camera.orthographicSize = m_fieldOfView;
                         break;
@@ -189,7 +189,7 @@ public class CameraScript : MonoBehaviour
     {
         while (m_depthOfField.focalLength != 20)
         {
-            m_depthOfField.focalLength.value -= 0.2f;
+            m_depthOfField.focalLength.value -= 0.4f;
             yield return null;
 
             if (m_depthOfField.focalLength <= 20)

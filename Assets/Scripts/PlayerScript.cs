@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 // enums
 using EnumHolder;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerScript : BaseOrganism
 {
-    [SerializeField]
-    private int m_speed;
+
     Vector2 m_velocity;
 
     [SerializeField]
@@ -26,6 +27,9 @@ public class PlayerScript : BaseOrganism
     [SerializeField]
     bool m_controlsEnabled = true;
 
+
+    public Canvas thing;
+
     // Start is called before the first frame update
     new void Awake()
     {
@@ -38,7 +42,7 @@ public class PlayerScript : BaseOrganism
         if (m_controlsEnabled)
         {
             m_velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
-            _rigidbody2D.velocity = m_velocity * m_speed;
+            _rigidbody2D.velocity = m_velocity * _stats.Speed;
         }
 
         //transform.position += m_velocity * m_speed * Time.deltaTime;
@@ -54,6 +58,13 @@ public class PlayerScript : BaseOrganism
         }
     }
 
+
+    IEnumerator PotatoScientistImage()
+    {
+       thing.GetComponentInChildren<Image>().CrossFadeAlpha(1,5,false);
+       yield return null;
+        //yield return new WaitForSeconds(5f);
+    }
 
 
     private void ProduceOffspring()
@@ -79,21 +90,6 @@ public class PlayerScript : BaseOrganism
             _children.Add(offspring);
         }
     }
-
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Food")
-    //    {
-            
-
-    //        _stats.HarvestFood(collision.gameObject.GetComponent<FoodScript>().GetFood(false));
-
-    //        float force = 5000f;
-
-    //        m_rigidbody2D.AddForce(collision.contacts[0].normal * force);
-    //    }
-    //}
-
     void OnTriggerEnter2D(Collider2D collision)
     {
 
@@ -112,6 +108,8 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(HaltControls());
+            thing.GetComponentInChildren<Image>().CrossFadeAlpha(1, 5, false);
+            //StartCoroutine(PotatoScientistImage());
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {

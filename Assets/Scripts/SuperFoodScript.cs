@@ -5,18 +5,11 @@ using TMPro;
 
 public class SuperFoodScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    //Do something with traits
+    TextMeshProUGUI _canvasText;
 
-    
-
-    void Start()
+    private void Start()
     {
-        //t.get
-    }
-
-    IEnumerator PotatoScientistImage()
-    {
-        yield return null;
+        _canvasText = GetComponentInChildren<TextMeshProUGUI>();
+        _canvasText.text = "?";
     }
 }
