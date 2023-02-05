@@ -31,7 +31,7 @@ public class SingleCelledOrganism : BaseOrganism
     static int          _spriteIndex = 0;
     
 
-    const float         FOOD_DECAY_TIME = 1.0f;
+    const float         FOOD_DECAY_TIME = 3.0f;
     const int           FOOD_DECAY_AMOUNT = 1;
 
 
@@ -40,6 +40,8 @@ public class SingleCelledOrganism : BaseOrganism
     new void Awake()
     {
         base.Awake();
+
+        _stats.Food = _foodRequired - 1;
 
         _state = State.Search;
         _target = null;
@@ -84,7 +86,18 @@ public class SingleCelledOrganism : BaseOrganism
         {
             yield return new WaitForSeconds(FOOD_DECAY_TIME);
 
-            _stats.Food -= FOOD_DECAY_AMOUNT;
+            if (_stats.Food > 0)
+            {
+                _stats.Food -= FOOD_DECAY_AMOUNT;
+                if (_stats.Food < 0)
+                    _stats.Food = 0;
+            }
+            else// (_stats.Food <= 0)
+            {
+                _stats.Health--;
+                if (_stats.Health <= 0)
+                    StartCoroutine(Die());
+            }
         }
     }
 
@@ -412,9 +425,11 @@ public class SingleCelledOrganism : BaseOrganism
                 print("Single Cell was attacked by another Single Cell");
                 _stats.TakeDamage(organism.Stats.Damage);
                 organism.Stats.Food += _stats.StealFood(organism.Stats.Damage);
+                if (!_stats.IsAlive)
+                    StartCoroutine(Die());
             }
 
-            if (CanAttack)
+            if (CanAttack && _stats.IsAlive)
             {
                 print("Single Cell is attacking another Single Cell");
                 organism.Stats.TakeDamage(_stats.Damage);
@@ -434,9 +449,11 @@ public class SingleCelledOrganism : BaseOrganism
                 print("Single Cell was attacked by an offspring");
                 _stats.TakeDamage(offspring.Stats.Damage);
                 offspring.Stats.Food += _stats.StealFood(offspring.Stats.Damage);
+                if (!_stats.IsAlive)
+                    StartCoroutine(Die());
             }
 
-            if (CanAttack && Stats.IsAlive)
+            if (CanAttack && _stats.IsAlive)
             {
                 print("Single Cell is attacking an offspring");
                 offspring.Stats.TakeDamage(_stats.Damage);
@@ -457,12 +474,15 @@ public class SingleCelledOrganism : BaseOrganism
     }
 
 
-    private void Die()
+    private IEnumerator Die()
     {
         for (int i = 0; i < _children.Count; i++)
         {
             Destroy(_children[i]);
-            Destroy(gameObject);
+
+            yield return new WaitForEndOfFrame();
         }
+
+        Destroy(gameObject);
     }
 }
