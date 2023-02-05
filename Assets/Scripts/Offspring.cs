@@ -287,6 +287,9 @@ public class Offspring : BaseOrganism
                 print("Parent was fed by a child.");
                 _parent.Stats.CollectFood(_stats.Food);
                 _stats.Food = 0;
+                _shouldDeposit = false;
+                _state = State.Search;
+                _target = null;
             }
             else
             {

@@ -75,6 +75,10 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.velocity = m_velocity * _stats.Speed;
         }
 
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
         //transform.position += m_velocity * m_speed * Time.deltaTime;
 
         if (Input.GetKeyUp(KeyCode.X))

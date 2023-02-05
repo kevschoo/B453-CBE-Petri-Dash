@@ -33,12 +33,6 @@ public class HUD : MonoBehaviour
         {
             _healthBar.value = _player.Stats.HealthPercentage;
             _foodBar.value = _player.FoodPercentage;
-
-            for (int i = 0; i < _player.ChildCount; i++)
-            {
-                Image child = _offspringTransform.GetChild(i).GetComponent<Image>();
-                child.enabled = true;
-            }
         }
     }
 }

@@ -268,12 +268,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_food: {fileID: 7849076992389386699, guid: 63bafd282d8564747bd85ad23da2ac7e, type: 3}
   m_superFood: {fileID: 7849076992389386699, guid: 358390db1898fb548989aa08d034ae1a, type: 3}
-  m_roundTime: 60
   m_roundInProgress: 1
-  spawn: 100
+  spawn: 125
   _clipboard: {fileID: 1631914101}
   _text: {fileID: 1484257039}
-  m_foodList: []
   _singleCellOrganisms: []
 --- !u!4 &170157316
 Transform:
@@ -2354,7 +2352,6 @@ MonoBehaviour:
   _foodRequired: 10
   _offspringPrefab: {fileID: 584443241509558212, guid: affdb2c3a4405624fa90d9250a33c498, type: 3}
   m_controlsEnabled: 1
-  thing: {fileID: 1857870491}
   scienceMan: {fileID: 208732498}
 --- !u!70 &1236319481
 CapsuleCollider2D:

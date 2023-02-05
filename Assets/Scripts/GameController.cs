@@ -15,9 +15,6 @@ public class GameController : MonoBehaviour
     GameObject m_superFood;
 
     [SerializeField]
-    float m_roundTime = 60;
-
-    [SerializeField]
     bool m_roundInProgress;
 
     [SerializeField]
@@ -28,7 +25,6 @@ public class GameController : MonoBehaviour
 
     public TextMeshProUGUI _text;
 
-    public List<GameObject> m_foodList = new List<GameObject>();
     public List<GameObject> _singleCellOrganisms= new List<GameObject>();
     void Start()
     {
@@ -42,29 +38,25 @@ public class GameController : MonoBehaviour
 
         while (m_roundInProgress)
         {
-            if (m_foodList.Count < 50)
+
+            int randomChance = Random.Range(1, 10);
+
+
+            //30% chance to spawn super trait food
+            if (randomChance > 7)
             {
-                int randomChance = Random.Range(1, 10);
-
-
-                //30% chance to spawn super trait food
-                if (randomChance > 7)
-                {
-                    GameObject x = Instantiate(m_superFood, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
-                    x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
-                    m_foodList.Add(x);
-                    
-                }
-                //70% chance to spawn normal food
-                else
-                {
-                    GameObject x = Instantiate(m_food, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
-                    x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
-                    m_foodList.Add(x);
-                }
+                GameObject x = Instantiate(m_superFood, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
+                x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+                
+            }
+            //70% chance to spawn normal food
+            else
+            {
+                GameObject x = Instantiate(m_food, new Vector3(Random.Range(-spawn, spawn), Random.Range(-spawn, spawn), 0), Quaternion.identity);
+                x.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
         }
 
     }
@@ -74,9 +66,9 @@ public class GameController : MonoBehaviour
     {
         if (!_singleCellOrganisms.Any((x) => x != null))
         {
-            m_roundInProgress = false;
             _text.text = "Experiment Completed";
             _text.color = Color.green;
+            m_roundInProgress = false;
             _clipboard.SetActive(true);
         }
 
