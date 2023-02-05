@@ -240,6 +240,7 @@ public class PlayerScript : BaseOrganism
         }
 
         m_controlsEnabled = false;
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().GameOver();
     }
 
 
