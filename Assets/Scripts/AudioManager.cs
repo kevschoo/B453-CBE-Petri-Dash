@@ -22,7 +22,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public enum SoundEffect
     {
-        
+        Bite,
+        Spawning,
     }
 
 
@@ -126,19 +127,12 @@ public class AudioManager : MonoBehaviour
     {
         // Music
         int count = System.Enum.GetValues(typeof(Music)).Length;
-        for (int i = 0; i < count; i++)
-        {
-            Music music = (Music)i;
-            _music.Add(music, GetAllAudioContent("Audio/Music/" + music.ToString()));
-        }
+        _music.Add(Music.Game, GetAudioContent("Audio/loop"));
 
         // UI Sound Effects
         count = System.Enum.GetValues(typeof(SoundEffect)).Length;
-        for (int i = 0; i < count; i++)
-        {
-            SoundEffect soundEffect = (SoundEffect)i;
-            _SoundEffects.Add(soundEffect, GetAllAudioContent("Audio/UI/" + soundEffect.ToString()));
-        }
+        _SoundEffects.Add(SoundEffect.Bite, GetAudioContent("Audio/bite"));
+        _SoundEffects.Add(SoundEffect.Spawning, GetAllAudioContent("Audio/Spawning"));
     }
 
     private AudioClip[] GetAllAudioContent(string path)
@@ -181,7 +175,7 @@ public class AudioManager : MonoBehaviour
     /// Play a specific sound effect.
     /// </summary>
     /// <param name="soundEffect"></param>
-    public void PlayUISoundEffect(SoundEffect soundEffect, float volume = 1.0f)
+    public void PlaySoundEffect(SoundEffect soundEffect, float volume = 1.0f)
     {
         AudioClip clip = PickRandomAudioClip(_SoundEffects[soundEffect]);
         bool played = false;

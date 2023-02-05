@@ -147,6 +147,8 @@ public class PlayerScript : BaseOrganism
             }
 
             _children.Add(offspring);
+
+            AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Spawning);
         }
     }
     void OnTriggerEnter2D(Collider2D collision)
@@ -164,6 +166,7 @@ public class PlayerScript : BaseOrganism
             }
 
             Destroy(collision.gameObject);
+            AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Bite);
         }
         else if (collision.CompareTag("Food"))
         {
@@ -173,7 +176,7 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(HaltControls());
 
-
+            AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Bite);
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {
@@ -195,6 +198,8 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(HaltControls());
+
+            AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Bite);
         }
         else if (collision.CompareTag("Offspring"))
         {
@@ -219,6 +224,7 @@ public class PlayerScript : BaseOrganism
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
             StartCoroutine(HaltControls());
+            AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Bite);
         }
     }
 
@@ -240,6 +246,7 @@ public class PlayerScript : BaseOrganism
         }
 
         m_controlsEnabled = false;
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().GameOver();
     }
 
 

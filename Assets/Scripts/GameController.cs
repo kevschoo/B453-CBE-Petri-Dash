@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameController : MonoBehaviour
 {
@@ -19,9 +23,17 @@ public class GameController : MonoBehaviour
     [SerializeField]
     int spawn;
 
+    [SerializeField]
+    GameObject _clipboard;
+
+    public TextMeshProUGUI _text;
+
     public List<GameObject> m_foodList = new List<GameObject>();
+    public List<GameObject> _singleCellOrganisms= new List<GameObject>();
     void Start()
     {
+
+        _singleCellOrganisms = GameObject.FindGameObjectsWithTag("SingleCelledOrganism").ToList();
         StartCoroutine(SpawnFood());
     }
 
@@ -60,18 +72,25 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_roundInProgress)
+        if (!_singleCellOrganisms.Any((x) => x != null))
         {
-            if (m_roundTime > 0)
-            {
-                m_roundTime -= Time.deltaTime;
-            }
-            else
-            {
-                Debug.Log("Time is up");
-                m_roundTime = 0;
-                m_roundInProgress= false;
-            }
+            m_roundInProgress = false;
+            _text.text = "Experiment Completed";
+            _text.color = Color.green;
+            _clipboard.SetActive(true);
         }
+
+    }
+
+    public void GameOver()
+    {
+        _text.text = "Specimen Terminated";
+        _text.color = Color.red;
+        m_roundInProgress = false;
+        _clipboard.SetActive(true);
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("Game");
     }
 }
