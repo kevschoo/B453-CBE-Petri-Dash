@@ -40,8 +40,34 @@ public class SingleCelledOrganism : BaseOrganism
         _target = null;
         _wondering = false;
 
-        _spriteRenderer.sprite = _sprites[_spriteIndex];
+        _spriteRenderer.sprite = _sprites[_spriteIndex % 5];
         _spriteIndex++;
+
+        switch (_spriteIndex % 7)
+        {
+            case 0:
+                _spriteRenderer.color = Color.blue;
+                break;
+            case 1:
+                _spriteRenderer.color = Color.cyan;
+                break;
+            case 2:
+                _spriteRenderer.color = Color.green;
+                break;
+            case 3:
+                _spriteRenderer.color = Color.magenta;
+                break;
+            case 4:
+                _spriteRenderer.color = Color.red;
+                break;
+            case 5:
+                _spriteRenderer.color = Color.yellow;
+                break;
+
+            default:
+                _spriteRenderer.color = Color.white;
+                break;
+        }
     }
 
 
@@ -102,12 +128,15 @@ public class SingleCelledOrganism : BaseOrganism
                                              0.0f);
         Vector2 direction = (randomPosition - transform.position).normalized;
 
-        _rigidbody2D.velocity = direction * _stats.Speed;
+        if (!_isShocked)
+            _rigidbody2D.velocity = direction * _stats.Speed;
 
         while (timer < duration && _target == null)
         {
             yield return new WaitForEndOfFrame();
 
+            if (!_isShocked)
+                _rigidbody2D.velocity = direction * _stats.Speed;
             timer += Time.deltaTime;
         }
 
@@ -124,8 +153,11 @@ public class SingleCelledOrganism : BaseOrganism
             return;
         }
 
-        Vector2 direction = (_target.position - transform.position).normalized;
-        _rigidbody2D.velocity = direction * _stats.Speed;
+        if (!_isShocked)
+        {
+            Vector2 direction = (_target.position - transform.position).normalized;
+            _rigidbody2D.velocity = direction * _stats.Speed;
+        }
 
         if (Vector2.Distance(transform.position, _target.position) < 0.1f)
         {
@@ -287,7 +319,8 @@ public class SingleCelledOrganism : BaseOrganism
                                             transform.position, 
                                             transform.rotation);
             Offspring offspring = clone.GetComponent<Offspring>();
-            offspring.AssignParent(this, _spriteRenderer.sprite);
+            offspring.AssignParent(this, _spriteRenderer.sprite, 
+                                         _spriteRenderer.color);
 
             foreach (Offspring child in _children)
             {
@@ -322,6 +355,18 @@ public class SingleCelledOrganism : BaseOrganism
 
 
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            Vector2 direction = -transform.position.normalized;
+
+            _rigidbody2D.velocity = direction * _stats.Speed;
+        }
+    }
+
+
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!_stats.IsAlive) { return; }
@@ -340,16 +385,23 @@ public class SingleCelledOrganism : BaseOrganism
             ScaleWithFood();
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            StartCoroutine(Shock());
         }
         else if (collision.CompareTag("SingleCelledOrganism"))
         {
             SingleCelledOrganism organism = collision.GetComponent<SingleCelledOrganism>();
             if (organism.CanAttack)
+            {
+                print("Single Cell was attacked by another Single Cell");
                 _stats.TakeDamage(organism.Stats.Damage);
+                organism.Stats.Food += _stats.StealFood(organism.Stats.Damage);
+            }
 
             if (CanAttack)
             {
+                print("Single Cell is attacking another Single Cell");
                 organism.Stats.TakeDamage(_stats.Damage);
+                _stats.Food += organism.Stats.StealFood(_stats.Damage);
                 if (!organism.Stats.IsAlive)
                     StartSearching();
             }
@@ -361,16 +413,32 @@ public class SingleCelledOrganism : BaseOrganism
                 return;
 
             if (offspring.CanAttack)
-                _stats.TakeDamage(offspring.Stats.Damage);
-
-            if (CanAttack)
             {
+                print("Single Cell was attacked by an offspring");
+                _stats.TakeDamage(offspring.Stats.Damage);
+                offspring.Stats.Food += _stats.StealFood(offspring.Stats.Damage);
+            }
+
+            if (CanAttack && Stats.IsAlive)
+            {
+                print("Single Cell is attacking an offspring");
                 offspring.Stats.TakeDamage(_stats.Damage);
+                _stats.Food += offspring.Stats.StealFood(_stats.Damage);
                 if (!offspring.Stats.IsAlive)
                     StartSearching();
 
             }
         }
+    }
+
+
+    private IEnumerator Shock()
+    {
+        _isShocked = true;
+
+        yield return new WaitForSeconds(0.1f);
+
+        _isShocked = false;
     }
 
 

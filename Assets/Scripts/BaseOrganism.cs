@@ -20,6 +20,8 @@ public abstract class BaseOrganism : MonoBehaviour
 
     protected Transform       _target;
 
+    protected bool            _isShocked;
+
 
 
     protected void Awake()
@@ -28,6 +30,8 @@ public abstract class BaseOrganism : MonoBehaviour
         _collider = GetComponent<Collider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        _isShocked = false;
 
         _stats.CalculateStats();
     }
@@ -124,6 +128,17 @@ public abstract class BaseOrganism : MonoBehaviour
     {
         float scale = 1.0f + Stats.Food * 0.0025f;
         transform.localScale = new Vector3(scale, scale, 1.0f);
+    }
+
+
+
+    protected IEnumerator Shock()
+    {
+        _isShocked = true;
+
+        yield return new WaitForSeconds(0.1f);
+
+        _isShocked = false;
     }
 
 

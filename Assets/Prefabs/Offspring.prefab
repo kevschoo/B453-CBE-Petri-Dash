@@ -147,7 +147,7 @@ MonoBehaviour:
     MaxFood: 25
     FoodMultiplier: 1
     Speed: 0
-    MaxSpeed: 5
+    MaxSpeed: 10
     SpeedMultiplier: 1
     Luck: 50
   _traits: 

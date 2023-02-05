@@ -68,7 +68,8 @@ public class PlayerScript : BaseOrganism
                                             transform.position,
                                             transform.rotation);
             Offspring offspring = clone.GetComponent<Offspring>();
-            offspring.AssignParent(this,_spriteRenderer.sprite);
+            offspring.AssignParent(this, _spriteRenderer.sprite,
+                                         _spriteRenderer.color);
 
             foreach (Offspring child in _children)
             {

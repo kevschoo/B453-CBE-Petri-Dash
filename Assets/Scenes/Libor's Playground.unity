@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 97691935}
   - component: {fileID: 97691934}
   - component: {fileID: 97691933}
+  - component: {fileID: 97691936}
   m_Layer: 0
   m_Name: Food (4)
   m_TagString: Food
@@ -252,7 +253,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -325,6 +326,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &97691936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97691932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &307679937
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +350,7 @@ GameObject:
   - component: {fileID: 307679940}
   - component: {fileID: 307679939}
   - component: {fileID: 307679938}
+  - component: {fileID: 307679941}
   m_Layer: 0
   m_Name: Food (2)
   m_TagString: Food
@@ -353,7 +368,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -426,6 +441,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &307679941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307679937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &318524029
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +465,7 @@ GameObject:
   - component: {fileID: 318524032}
   - component: {fileID: 318524031}
   - component: {fileID: 318524030}
+  - component: {fileID: 318524033}
   m_Layer: 0
   m_Name: Food (9)
   m_TagString: Food
@@ -454,7 +483,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -527,6 +556,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &318524033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318524029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &498250304
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,10 +765,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SingleCelledOrganism (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 3764766102665645195, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
-      propertyPath: _traits.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3764766102665645197, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -784,6 +822,7 @@ GameObject:
   - component: {fileID: 949846561}
   - component: {fileID: 949846560}
   - component: {fileID: 949846559}
+  - component: {fileID: 949846562}
   m_Layer: 0
   m_Name: Food (7)
   m_TagString: Food
@@ -801,7 +840,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -874,6 +913,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &949846562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949846558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &1033879610
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,6 +937,7 @@ GameObject:
   - component: {fileID: 1033879613}
   - component: {fileID: 1033879612}
   - component: {fileID: 1033879611}
+  - component: {fileID: 1033879614}
   m_Layer: 0
   m_Name: Food (6)
   m_TagString: Food
@@ -902,7 +955,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -975,6 +1028,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1033879614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033879610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &1110655551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,6 +1153,7 @@ GameObject:
   - component: {fileID: 1233477846}
   - component: {fileID: 1233477845}
   - component: {fileID: 1233477844}
+  - component: {fileID: 1233477847}
   m_Layer: 0
   m_Name: Food
   m_TagString: Food
@@ -1104,7 +1171,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1177,6 +1244,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1233477847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233477843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &1252894355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,6 +1369,7 @@ GameObject:
   - component: {fileID: 1296091737}
   - component: {fileID: 1296091736}
   - component: {fileID: 1296091735}
+  - component: {fileID: 1296091738}
   m_Layer: 0
   m_Name: Food (5)
   m_TagString: Food
@@ -1306,7 +1387,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1379,6 +1460,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1296091738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296091734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &1359693514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1390,6 +1484,7 @@ GameObject:
   - component: {fileID: 1359693517}
   - component: {fileID: 1359693516}
   - component: {fileID: 1359693515}
+  - component: {fileID: 1359693518}
   m_Layer: 0
   m_Name: Food (3)
   m_TagString: Food
@@ -1407,7 +1502,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1480,6 +1575,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1359693518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359693514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &1494202535
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,6 +1599,7 @@ GameObject:
   - component: {fileID: 1494202538}
   - component: {fileID: 1494202537}
   - component: {fileID: 1494202536}
+  - component: {fileID: 1494202539}
   m_Layer: 0
   m_Name: Food (1)
   m_TagString: Food
@@ -1508,7 +1617,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1581,6 +1690,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1494202539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494202535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b927e5bd4648164ba5dd6cac1881358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_foodAmount: 10
 --- !u!1 &2088127980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,6 +1814,22 @@ PrefabInstance:
     - target: {fileID: 3764766102665645192, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
       propertyPath: m_Name
       value: SingleCelledOrganism
+      objectReference: {fileID: 0}
+    - target: {fileID: 3764766102665645194, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f2e68c2dbf2513844a0fb99aa1946b9b, type: 3}
+    - target: {fileID: 3764766102665645194, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3764766102665645194, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3764766102665645194, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3764766102665645195, guid: f81d1e2049f30f84b86259ed6cdfae28, type: 3}
       propertyPath: _traits.Array.size

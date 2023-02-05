@@ -94,13 +94,16 @@ public class Offspring : BaseOrganism
                                              0.0f);
         Vector2 direction = (randomPosition - transform.position).normalized;
 
-        _rigidbody2D.velocity = direction * _stats.Speed;
+        if (!_isShocked)
+            _rigidbody2D.velocity = direction * _stats.Speed;
 
         while (timer < duration && _target == null && 
                _state != State.Flock)
         {
             yield return new WaitForEndOfFrame();
 
+            if (!_isShocked)
+                _rigidbody2D.velocity = direction * _stats.Speed;
             timer += Time.deltaTime;
         }
 
@@ -116,6 +119,8 @@ public class Offspring : BaseOrganism
             _state = State.Search;
             return;
         }
+        else if (_isShocked)
+            return;
 
         Vector2 direction = (_target.position - transform.position).normalized;
         _rigidbody2D.velocity = direction * _stats.Speed;
@@ -259,6 +264,18 @@ public class Offspring : BaseOrganism
 
 
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            Vector2 direction = -transform.position.normalized;
+
+            _rigidbody2D.velocity = direction * _stats.Speed;
+        }
+    }
+
+
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!_stats.IsAlive) { return; }
@@ -278,12 +295,14 @@ public class Offspring : BaseOrganism
                 {
                     print("Offspring was attacked by a Single Cell.");
                     _stats.TakeDamage(organism.Stats.Damage);
+                    organism.Stats.Food += _stats.StealFood(organism.Stats.Damage);
                 }
 
-                if (CanAttack)
+                if (CanAttack && Stats.IsAlive)
                 {
                     print("Offspring attacked a Single cell.");
                     organism.Stats.TakeDamage(_stats.Damage);
+                    _stats.Food += organism.Stats.StealFood(_stats.Damage);
                     if (!organism.Stats.IsAlive)
                         StartSearching();
                 }
@@ -301,15 +320,16 @@ public class Offspring : BaseOrganism
             {
                 print("Offspring was attacked by an Offspring.");
                 _stats.TakeDamage(offspring.Stats.Damage);
+                offspring.Stats.Food += _stats.StealFood(offspring.Stats.Damage);
             }
 
-            if (CanAttack)
+            if (CanAttack && Stats.IsAlive)
             {
                 print("Offspring attacked an Offspring.");
                 offspring.Stats.TakeDamage(_stats.Damage);
+                _stats.Food += offspring.Stats.StealFood(_stats.Damage);
                 if (!offspring.Stats.IsAlive)
                     StartSearching();
-
             }
         }
         else if (collision.CompareTag("Food"))
@@ -317,6 +337,8 @@ public class Offspring : BaseOrganism
             _stats.HarvestFood(collision.GetComponent<FoodScript>().GetFood(false));
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            CheckFoodDeposit();
+            StartCoroutine(Shock());
         }
     }
 
@@ -336,16 +358,18 @@ public class Offspring : BaseOrganism
         {
             _shouldDeposit = true;
             _target = _parent.transform;
+            _state = State.Seek;
         }
     }
 
 
 
-    public void AssignParent(BaseOrganism parent, Sprite sprite)
+    public void AssignParent(BaseOrganism parent, Sprite sprite, Color colour)
     {
         _parent = parent;
 
         _spriteRenderer.sprite = sprite;
+        _spriteRenderer.color = colour;
     }
 
 
