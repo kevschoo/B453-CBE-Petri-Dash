@@ -27,8 +27,7 @@ public class PlayerScript : BaseOrganism
     [SerializeField]
     bool m_controlsEnabled = true;
 
-
-    public Canvas thing;
+    public GameObject scienceMan;
 
     const float FOOD_DECAY_TIME = 3.0f;
     const int FOOD_DECAY_AMOUNT = 1;
@@ -39,8 +38,7 @@ public class PlayerScript : BaseOrganism
     new void Awake()
     {
         base.Awake();
-        alpha = thing.GetComponentInChildren<Image>().color.a;
-
+        alpha = scienceMan.GetComponent<Image>().color.a;
         _stats.Food = _foodRequired - 1;
 
         StartCoroutine(DecayFood());
@@ -97,7 +95,7 @@ public class PlayerScript : BaseOrganism
         while (alpha < 1)
         {
             alpha += 0.09f;
-            thing.GetComponentInChildren<Image>().color = new Color(thing.GetComponentInChildren<Image>().color.r, thing.GetComponentInChildren<Image>().color.g, thing.GetComponentInChildren<Image>().color.b,alpha);
+            scienceMan.GetComponent<Image>().color = new Color(scienceMan.GetComponent<Image>().color.r, scienceMan.GetComponent<Image>().color.g, scienceMan.GetComponent<Image>().color.b,alpha);
             yield return new WaitForSeconds(0.1f);
 
             if (alpha >= 1)
@@ -114,7 +112,7 @@ public class PlayerScript : BaseOrganism
         while (alpha > 0)
         {
             alpha -= 0.09f;
-            thing.GetComponentInChildren<Image>().color = new Color(thing.GetComponentInChildren<Image>().color.r, thing.GetComponentInChildren<Image>().color.g, thing.GetComponentInChildren<Image>().color.b, alpha);
+            scienceMan.GetComponent<Image>().color = new Color(scienceMan.GetComponent<Image>().color.r, scienceMan.GetComponent<Image>().color.g, scienceMan.GetComponent<Image>().color.b, alpha);
             yield return new WaitForSeconds(0.1f);
 
             if (alpha <= 0)
