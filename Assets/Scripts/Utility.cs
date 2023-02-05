@@ -2,6 +2,7 @@ using System.Reflection;
 using UnityEngine;
 // trait
 using EnumHolder;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Utility
 {
@@ -38,5 +39,12 @@ public class Utility
         }
 
         return trait;
+    }
+
+    public static Vector2 BounceBack(Vector3 t_origin,Vector3 t_other)
+    {
+        Vector3 m_direction = t_origin - t_other;
+        return m_direction * 250f;
+
     }
 }

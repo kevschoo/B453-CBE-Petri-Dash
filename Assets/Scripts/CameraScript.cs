@@ -8,10 +8,6 @@ public class CameraScript : MonoBehaviour
 {
     Vector3 m_trackingPosition;
 
-    [SerializeField]
-    int m_speed = 10;
-    // Update is called once per frame
-
     float m_fieldOfView;
 
     [SerializeField]
@@ -25,7 +21,7 @@ public class CameraScript : MonoBehaviour
     [Range(1, 3)] int zoomLevel = 2;
 
     [SerializeField]
-    private int m_switchSpeed= 1;
+    private int m_switchSpeed = 1;
 
     Vector2 m_leftPoint;
     Vector2 m_rightPoint;
@@ -204,19 +200,4 @@ public class CameraScript : MonoBehaviour
         }    
 
     }
-    //void BlurCamera()
-    //{
-    //    if (m_depthOfField.focalLength < 30)
-    //    {
-    //        m_depthOfField.focalLength.value += 1f;
-    //    }
-    //}
-
-    //void UnBlurCamera()
-    //{
-    //    if (m_depthOfField.focalLength > 20)
-    //    {
-    //        m_depthOfField.focalLength.value -= 1f;
-    //    }
-    //}
 }

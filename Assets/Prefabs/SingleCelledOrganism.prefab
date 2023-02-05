@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3764766102665645197}
   - component: {fileID: 3764766102665645194}
   - component: {fileID: 3764766102665645199}
-  - component: {fileID: 3764766102665645196}
   - component: {fileID: 3764766102665645195}
+  - component: {fileID: 3531490670103844307}
   m_Layer: 0
   m_Name: SingleCelledOrganism
   m_TagString: SingleCelledOrganism
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 1337056951
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 593307fdf7d4bfb4da5d3632685b98c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -108,22 +108,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &3764766102665645196
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3764766102665645192}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1
 --- !u!114 &3764766102665645195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +126,7 @@ MonoBehaviour:
     HealthMultiplier: 1
     Damage: 0
     MaxDamage: 15
-    DamageMultiplier: 1
+    DamageMultiplier: 0
     Food: 0
     MaxFood: 9999
     FoodMultiplier: 1
@@ -152,12 +136,28 @@ MonoBehaviour:
     Luck: 0.5
   _traits: 
   _sightRadius: 20
+  _children: []
+  _offspringPrefab: {fileID: 584443241509558212, guid: affdb2c3a4405624fa90d9250a33c498, type: 3}
+  _foodRequired: 10
   _sprites:
   - {fileID: 21300000, guid: 491427376cb9d224093108e47f3fbd29, type: 3}
   - {fileID: 21300000, guid: b5e0c604cce4d7642af0f2e7a27b2a91, type: 3}
   - {fileID: 21300000, guid: 593307fdf7d4bfb4da5d3632685b98c0, type: 3}
   - {fileID: 21300000, guid: 932557b887345694e8f7829b0b56e51e, type: 3}
   - {fileID: 21300000, guid: f2e68c2dbf2513844a0fb99aa1946b9b, type: 3}
-  _children: []
-  _offspringPrefab: {fileID: 584443241509558212, guid: affdb2c3a4405624fa90d9250a33c498, type: 3}
-  _foodRequired: 50
+--- !u!70 &3531490670103844307
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3764766102665645192}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Size: {x: 2.12, y: 5}
+  m_Direction: 0
