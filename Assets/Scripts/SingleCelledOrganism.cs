@@ -463,6 +463,19 @@ public class SingleCelledOrganism : BaseOrganism
 
             }
         }
+        //Edited Code ---------------------------------------------------------------------------------------------------
+        else if (collision.CompareTag("EnvironmentalHazard"))
+        {
+            //To do
+        }
+        else if (collision.CompareTag("PushableHazard"))
+        {
+            //To do
+        }
+        else if (collision.CompareTag("MovementHazard"))
+        {
+            //To do
+        }
     }
 
 

@@ -90,6 +90,13 @@ public class PlayerScript : BaseOrganism
         {
             ProduceOffspring();
         }
+        //Edited Code ---------------------------------------------------------------------------------------------------
+        //TO DO: Add Splitting or dashing
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            
+        }
+
     }
 
 
@@ -228,6 +235,20 @@ public class PlayerScript : BaseOrganism
             StartCoroutine(HaltControls());
             AudioManager.Instance().PlaySoundEffect(AudioManager.SoundEffect.Bite);
         }
+        //Edited Code ---------------------------------------------------------------------------------------------------
+        else if (collision.CompareTag("EnvironmentalHazard"))
+        {
+            //To do
+        }
+        else if (collision.CompareTag("PushableHazard"))
+        {
+            //To do
+        }
+        else if (collision.CompareTag("MovementHazard"))
+        {
+            //To do
+        }
+        
     }
 
     IEnumerator HaltControls()
