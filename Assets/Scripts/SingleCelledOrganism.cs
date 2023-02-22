@@ -34,7 +34,9 @@ public class SingleCelledOrganism : BaseOrganism
     const float         FOOD_DECAY_TIME = 3.0f;
     const int           FOOD_DECAY_AMOUNT = 1;
 
-
+    [SerializeField] bool isBeingPushed = false;
+    [SerializeField] float _pushSpeed = 25f;
+    [SerializeField] Vector2 pushDirection;
 
 
     new void Awake()
@@ -106,7 +108,7 @@ public class SingleCelledOrganism : BaseOrganism
     void Update()
     {
         if (_stats.IsAlive == false) { return; }
-
+        if(isBeingPushed == true) {return;}
         switch (_state)
         {
             case State.Search:
@@ -335,6 +337,13 @@ public class SingleCelledOrganism : BaseOrganism
             _target = closestFood;
     }
 
+    void FixedUpdate()
+    {
+        if(isBeingPushed)
+        {
+            this._rigidbody2D.velocity += pushDirection * _pushSpeed * Time.fixedDeltaTime;
+        }
+    }
 
     private void ProduceOffspring()
     {
@@ -466,20 +475,39 @@ public class SingleCelledOrganism : BaseOrganism
         //Edited Code ---------------------------------------------------------------------------------------------------
         else if (collision.CompareTag("EnvironmentalHazard"))
         {
-            //To do
+            _stats.TakeDamage(5);
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
         }
         else if (collision.CompareTag("PushableHazard"))
         {
-            //To do
+            Hazard_Block BHaz = collision.GetComponent<Hazard_Block>();
+            if(BHaz.isDangerous == true)
+            {
+            Debug.Log("Damaged by moving block");
+            _stats.TakeDamage(5);
+            isBeingPushed = true;
+            _rigidbody2D.AddForce(Utility.BounceBack(transform.position, collision.transform.position));
+            }
         }
         else if (collision.CompareTag("MovementHazard"))
         {
-            //To do
+            Debug.Log("MovementHazard entered by" + this.name);
+            isBeingPushed = true;
+            Hazard_Movement MHaz = collision.GetComponent<Hazard_Movement>();
+            this.pushDirection = MHaz.pushDirection;
+            StartCoroutine(StopPush(3));
+
         }
     }
 
+    IEnumerator StopPush(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isBeingPushed = false;
+    }
 
-    private void StartSearching()
+    void StartSearching()
     {
         _rigidbody2D.velocity = Vector2.zero;
         _state = State.Search;
@@ -487,7 +515,7 @@ public class SingleCelledOrganism : BaseOrganism
     }
 
 
-    private IEnumerator Die()
+    IEnumerator Die()
     {
         for (int i = 0; i < _children.Count; i++)
         {
