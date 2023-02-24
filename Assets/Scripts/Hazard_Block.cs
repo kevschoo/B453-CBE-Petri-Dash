@@ -14,6 +14,11 @@ public class Hazard_Block : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] SpriteRenderer sprite;
 
+    void Start()
+    {
+        Destroy(this.gameObject,30);
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         Rigidbody2D otherRigidbody = collision.collider.GetComponent<Rigidbody2D>();

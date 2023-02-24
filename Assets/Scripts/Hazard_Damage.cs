@@ -26,6 +26,7 @@ public class Hazard_Damage : MonoBehaviour
         SpikeBody.transform.Rotate(0f, 0f, _rotationSpeed * Time.deltaTime);
         SpikeBodyTwo.transform.Rotate(0f, 0f, -_rotationSpeed * Time.deltaTime * 0.5f);
 
+        
         Vector2 direction = _wanderPoint - (Vector2)transform.position;
         float distance = direction.magnitude;
         if (distance > .05f)
